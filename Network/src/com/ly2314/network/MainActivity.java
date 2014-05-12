@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -49,9 +50,6 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
     }
 
 
@@ -96,7 +94,18 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
-					fetch(_editText.getText().toString());
+					AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>()
+					{
+						@Override
+						protected String doInBackground(Void... params) {
+							return fetch(_editText.getText().toString());
+						}
+						@Override
+						protected void onPostExecute(String result) {
+							Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+						}
+					};
+					task.execute();
 				}
 			});
             return rootView;
@@ -119,13 +128,13 @@ public class MainActivity extends ActionBarActivity {
 	        	
 	        	JSONObject object = new JSONObject(result);
 	        	JSONArray results = object.getJSONArray("results");
+	        	String addressResult = "";
 	        	for (int i = 0; i < results.length(); ++i)
 	        	{
 	        		String formattedAddress = results.getJSONObject(i).getString("formatted_address");
-	        		Toast.makeText(getActivity(), formattedAddress, Toast.LENGTH_SHORT).show();
-	        	}
-	        	
-	        	return result;
+	        		addressResult += formattedAddress + ",";
+	        	}	        	
+	        	return addressResult;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
