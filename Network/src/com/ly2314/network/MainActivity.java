@@ -7,6 +7,13 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -76,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             _textView = (TextView) rootView.findViewById(R.id.textView1);
-            String content = fetch();
+            String content = fetch2();
             _textView.setText(content);
             return rootView;
         }
@@ -105,6 +112,26 @@ public class MainActivity extends ActionBarActivity {
 				e.printStackTrace();
 			}
 			return null;
+        }
+        
+        private String fetch2()
+        {
+        	String urlString = "https://www.google.com";
+        	DefaultHttpClient httpClient = new DefaultHttpClient();
+        	HttpGet get = new HttpGet(urlString);
+        	
+        	ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        	try {
+				String result = httpClient.execute(get, responseHandler);
+				return result;
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return null;
         }
     }
 
