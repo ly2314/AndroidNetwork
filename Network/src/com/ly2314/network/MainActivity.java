@@ -25,7 +25,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Build;
 
@@ -73,7 +76,8 @@ public class MainActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
-    	private TextView _textView;
+    	private EditText _editText;
+    	private Button _button;
     	
         public PlaceholderFragment() {
         }
@@ -82,15 +86,21 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            _textView = (TextView) rootView.findViewById(R.id.textView1);
-            String content = fetch2();
-            _textView.setText(content);
+            _editText = (EditText) rootView.findViewById(R.id.editText1);
+            _button = (Button) rootView.findViewById(R.id.button1);
+            _button.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					fetch(_editText.getText().toString());
+				}
+			});
             return rootView;
         }
         
-        private String fetch()
+        private String fetch(String address)
         {
-        	String urlString = "https://www.ly2314.cc";
+        	String urlString = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=false";
         	URL url;
 			try {
 				url = new URL(urlString);
