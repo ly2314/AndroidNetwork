@@ -13,6 +13,9 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -30,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Build;
 
 @SuppressLint("NewApi")
@@ -112,7 +116,15 @@ public class MainActivity extends ActionBarActivity {
 	        	{
 	        		result += line;
 	        	}
-	        	Log.d("debug", result);
+	        	
+	        	JSONObject object = new JSONObject(result);
+	        	JSONArray results = object.getJSONArray("results");
+	        	for (int i = 0; i < results.length(); ++i)
+	        	{
+	        		String formattedAddress = results.getJSONObject(i).getString("formatted_address");
+	        		Toast.makeText(getActivity(), formattedAddress, Toast.LENGTH_SHORT).show();
+	        	}
+	        	
 	        	return result;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -120,28 +132,11 @@ public class MainActivity extends ActionBarActivity {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return null;
-        }
-        
-        private String fetch2()
-        {
-        	String urlString = "https://www.google.com";
-        	DefaultHttpClient httpClient = new DefaultHttpClient();
-        	HttpGet get = new HttpGet(urlString);
-        	
-        	ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        	try {
-				String result = httpClient.execute(get, responseHandler);
-				return result;
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return null;
         }
     }
 
