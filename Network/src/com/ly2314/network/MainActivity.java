@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
@@ -80,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
 
     	private EditText _editText;
     	private Button _button;
+    	private TextView _textView;
     	
         public PlaceholderFragment() {
         }
@@ -89,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             _editText = (EditText) rootView.findViewById(R.id.editText1);
+            _textView = (TextView) rootView.findViewById(R.id.textBox1);
             _button = (Button) rootView.findViewById(R.id.button1);
             _button.setOnClickListener(new OnClickListener() {
 				
@@ -102,7 +106,8 @@ public class MainActivity extends ActionBarActivity {
 						}
 						@Override
 						protected void onPostExecute(String result) {
-							Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+							_textView.setText(result);
+							//Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
 						}
 					};
 					task.execute();
@@ -113,10 +118,10 @@ public class MainActivity extends ActionBarActivity {
         
         private String fetch(String address)
         {
-        	String urlString = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=false";
-        	URL url;
 			try {
-				url = new URL(urlString);
+				String addr = URLEncoder.encode(address, "utf-8");
+				String urlString = "http://maps.googleapis.com/maps/api/geocode/json?address=" + addr + "&sensor=false";
+				URL url = new URL(urlString);
 	        	URLConnection urlConnection = url.openConnection();
 	        	InputStream is = urlConnection.getInputStream();
 	        	BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
@@ -125,26 +130,18 @@ public class MainActivity extends ActionBarActivity {
 	        	{
 	        		result += line;
 	        	}
-	        	
-	        	JSONObject object = new JSONObject(result);
-	        	JSONArray results = object.getJSONArray("results");
-	        	String addressResult = "";
-	        	for (int i = 0; i < results.length(); ++i)
-	        	{
-	        		String formattedAddress = results.getJSONObject(i).getString("formatted_address");
-	        		addressResult += formattedAddress + ",";
-	        	}	        	
-	        	return addressResult;
+	        	return result;
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+        	
 			return null;
         }
     }

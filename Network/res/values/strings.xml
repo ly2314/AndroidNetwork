@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Network</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">台北市羅斯福路四段一號</string>
     <string name="action_settings">Settings</string>
 
 </resources>

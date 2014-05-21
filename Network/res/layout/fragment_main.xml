@@ -8,11 +8,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ly2314.network.MainActivity$PlaceholderFragment" >
 
+    <TextView
+        android:id="@+id/textBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
     <EditText
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world"
+        android:layout_alignLeft="@+id/textBox1"
+        android:layout_below="@+id/textBox1"
         android:ems="10">
         <requestFocus />
     </EditText>
@@ -23,6 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/editText1"
         android:layout_below="@+id/editText1"
-        android:text="Button"/>"
+        android:text="Button"/>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button1"
+        android:layout_toRightOf="@+id/button1"
+        android:text="And23710" />
+
+"
 
 </RelativeLayout>
